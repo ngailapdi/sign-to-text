@@ -8,6 +8,10 @@ cap = cv2.VideoCapture(0)
 frameNumber = 0
 lastFive = []
 lastZero = []
+lastFour = []
+lastOne = []
+lastTwo = []
+lastThree = []
 lastFrameDetected = -150
 while(cap.isOpened()):
     frameNumber += 1
@@ -71,6 +75,13 @@ while(cap.isOpened()):
             #cv2.circle(crop_img,far,5,[0,0,255],-1)
     if count_defects == 1:
         cv2.putText(img,"Two Fingers Detected", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        if len(lastOne) > 2 and len(lastZero) > 2:
+            if frameNumber - lastOne[-1] < 10 and abs(lastOne[-1] - lastZero[-1] < 10 and frameNumber - lastFrameDetected > 40):
+                os.system("say 'hello'")
+                lastFrameDetected = frameNumber
+                lastOne=[]
+                lastZero=[]
+        lastOne.append(frameNumber)
     elif count_defects == 2:
         str = "Three Fingers Detected"
         cv2.putText(img, str, (5,50), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
@@ -78,6 +89,7 @@ while(cap.isOpened()):
         cv2.putText(img,"4 Fingers Detected :P", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     elif count_defects == 4:
         cv2.putText(img,"FIVE!!!", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        #os.system("say 'hello'")
         lastFive.append(frameNumber)
     else:
         cv2.putText(img,"No Fingers!!!", (50,50),\
@@ -88,6 +100,8 @@ while(cap.isOpened()):
                     print("Goodbye")
                     os.system("say 'goodbye'")
                     lastFrameDetected = frameNumber
+                    lastFive = []
+                    lastZero = []
         lastZero.append(frameNumber)
     #cv2.imshow('drawing', drawing)
     #cv2.imshow('end', crop_img)
