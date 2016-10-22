@@ -3,6 +3,7 @@ sys.path.append('/usr/local/lib/python2.7/site-packages')
 import cv2
 import numpy as np
 import math
+import os
 cap = cv2.VideoCapture(0)
 frameNumber = 0
 lastFive = []
@@ -85,6 +86,7 @@ while(cap.isOpened()):
 
             if frameNumber - lastFive[-1]<10 and abs(lastZero[-1]-lastFive[-1])<10 and frameNumber - lastFrameDetected >40 :
                     print("Goodbye")
+                    os.system("say 'goodbye'")
                     lastFrameDetected = frameNumber
         lastZero.append(frameNumber)
     #cv2.imshow('drawing', drawing)
