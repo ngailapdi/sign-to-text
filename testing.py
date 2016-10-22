@@ -7,6 +7,7 @@ cap = cv2.VideoCapture(0)
 frameNumber = 0
 lastFive = []
 lastZero = []
+lastFrameDetected = -150
 while(cap.isOpened()):
     frameNumber += 1
     ret, img = cap.read()
@@ -48,24 +49,25 @@ while(cap.isOpened()):
     count_defects = 0
     
     cv2.drawContours(thresh1, contours, -1, (0,255,0), 3)
-    for i in range(defects.shape[0]):
-        s,e,f,d = defects[i,0]
-        start = tuple(cnt[s][0])
-        end = tuple(cnt[e][0])
-        far = tuple(cnt[f][0])
-        a = math.sqrt((end[0] - start[0])**2 + (end[1] - start[1])**2)
-        b = math.sqrt((far[0] - start[0])**2 + (far[1] - start[1])**2)
-        c = math.sqrt((end[0] - far[0])**2 + (end[1] - far[1])**2)
-        angle = math.acos((b**2 + c**2 - a**2)/(2*b*c)) * 57
-        #    cv2.putText(img, "Angle ="+ str(angle), (50,300), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
-        #print(angle)
-        if angle <= 90:
-            count_defects += 1
-            print ("1 finger detected")
-            cv2.circle(crop_img,far,1,[0,0,255],-1)
-        #dist = cv2.pointPolygonTest(cnt,far,True)
-        cv2.line(crop_img,start,end,[0,255,0],2)
-        #cv2.circle(crop_img,far,5,[0,0,255],-1)
+    if defects is not None:
+        for i in range(defects.shape[0]):
+            s,e,f,d = defects[i,0]
+            start = tuple(cnt[s][0])
+            end = tuple(cnt[e][0])
+            far = tuple(cnt[f][0])
+            a = math.sqrt((end[0] - start[0])**2 + (end[1] - start[1])**2)
+            b = math.sqrt((far[0] - start[0])**2 + (far[1] - start[1])**2)
+            c = math.sqrt((end[0] - far[0])**2 + (end[1] - far[1])**2)
+            angle = math.acos((b**2 + c**2 - a**2)/(2*b*c)) * 57
+            #    cv2.putText(img, "Angle ="+ str(angle), (50,300), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+            #print(angle)
+            if angle <= 90:
+                count_defects += 1
+                #lastFrameDetected = print ("1 finger detected")
+                cv2.circle(crop_img,far,1,[0,0,255],-1)
+            #dist = cv2.pointPolygonTest(cnt,far,True)
+            cv2.line(crop_img,start,end,[0,255,0],2)
+            #cv2.circle(crop_img,far,5,[0,0,255],-1)
     if count_defects == 1:
         cv2.putText(img,"Two Fingers Detected", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     elif count_defects == 2:
@@ -80,8 +82,10 @@ while(cap.isOpened()):
         cv2.putText(img,"No Fingers!!!", (50,50),\
                     cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
         if len(lastFive)>2 and len(lastZero)>2:
-            if frameNumber - lastFive[-1]<10 and abs(lastZero[-1]-lastFive[-1])<10:
-                print("Goodbye")
+
+            if frameNumber - lastFive[-1]<10 and abs(lastZero[-1]-lastFive[-1])<10 and frameNumber - lastFrameDetected >40 :
+                    print("Goodbye")
+                    lastFrameDetected = frameNumber
         lastZero.append(frameNumber)
     #cv2.imshow('drawing', drawing)
     #cv2.imshow('end', crop_img)
