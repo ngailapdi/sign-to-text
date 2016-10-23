@@ -1,4 +1,5 @@
 import sys
+sys.path.append('/usr/local/lib/python2.7/site-packages')
 import numpy as np
 import cv2
 
@@ -66,6 +67,7 @@ while (cap.isOpened()):
 
 responses = np.array(responses,np.float32)
 responses = responses.reshape((responses.size,1))
+print (responses)
 print "training complete"
 
 np.savetxt('./ml_data/generalsamples.data',samples)

@@ -37,8 +37,8 @@ lastTwo = []
 lastThree = []
 lastFour = []
 lastFive = []
-lastFrameDetected = -150
-
+lastFrameDetected = -50
+words = {0: 'Hello', 1: 'I', 2: 'Love', 3: 'You', 5: 'Good Bye'}
 
 #Main Function
 cap = cv2.VideoCapture(0)
@@ -78,9 +78,12 @@ while(cap.isOpened()):
             roismall = roismall.reshape((1,100))
             roismall = np.float32(roismall)
             retval, results, neigh_resp, dists = model.find_nearest(roismall, k = 1)
-            string = str(int((results[0][0]))-48)
-            if (dists<30):
+            digit = int((results[0][0]))-48
+            string = words[digit]
+            if (dists<20 and frameNumber - lastFrameDetected >10):
+                lastFrameDetected = frameNumber
                 print(string)
+                print(dists)
                 os.system("say '{0}'".format(string)) 
             else:    
                 print(dists)
