@@ -38,9 +38,9 @@ while (cap.isOpened()):
                     key = cv2.waitKey(10)
                     responses.append(k)
                     cv2.imwrite('./img/test{0}.png'.format(count), img)
-                    count += 1
-                    print (k)
                     sample = roismall.reshape((1,100))
+                    samples = np.append(samples, sample, 0)
+                    count += 1
                     # samples = np.append(samples,sample,0)
                     # if key == 27:  # (escape to quit)
                     #     sys.exit()
