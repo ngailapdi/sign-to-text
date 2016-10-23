@@ -52,7 +52,7 @@ while (cap.isOpened()):
                     roismall = cv2.resize(roi,(10,10))
                     key = cv2.waitKey(10)
                     responses.append(k)
-                    cv2.imwrite('./img/test{0}.png'.format(count), crop_img)
+                    cv2.imwrite('./img/sample{0}.png'.format(count), crop_img)
                     sample = roismall.reshape((1,100))
                     samples = np.append(samples, sample, 0)
                     count += 1
@@ -70,5 +70,5 @@ responses = responses.reshape((responses.size,1))
 print (responses)
 print "training complete"
 
-np.savetxt('./ml_data/generalsamples.data',samples)
-np.savetxt('./ml_data/generalresponses.data',responses)
+np.savetxt('./ml_data/magichand_samples.data',samples)
+np.savetxt('./ml_data/magichand_responses.data',responses)
