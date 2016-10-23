@@ -4,37 +4,60 @@ import cv2
 import numpy as np
 import math
 import os
-cap = cv2.VideoCapture(0)
-frameNumber = 0
-lastFive = []
-lastZero = []
-lastFour = []
-lastOne = []
-lastTwo = []
-lastThree = []
-lastFrameDetected = -150
-while(cap.isOpened()):
-    frameNumber += 1
-    ret, img = cap.read()
-    if img is not None:
-        flip_image = img.copy()
-        flip_image = cv2.flip(img,1)
+
+# Function to flip image in mirror effect
+def flippedImage(image):
+    if image is not None:
+        flip_image = image.copy()
+        flip_image = cv2.flip(image,1)
     else:
         flip_image = img
-    img = flip_image
-    cv2.rectangle(img,(400,400),(100,100),(0,255,0),0)
-    crop_img = img[100:400, 100:400]
-    #print crop_img.shape
+    return flip_image
+
+# Background Subtraction and turn image to black-white
+def blackWhiteImage(crop_img):
     grey = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
     value = (35, 35)
     blurred = cv2.GaussianBlur(grey, value, 0)
     _, thresh1 = cv2.threshold(blurred, 150, 255,
                                cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+    return thresh1
+
+
+
+# Initialization
+frameNumber = 0
+lastZero = []
+lastOne = []
+lastTwo = []
+lastThree = []
+lastFour = []
+lastFive = []
+lastFrameDetected = -150
+
+
+#Main Function
+cap = cv2.VideoCapture(0)
+while(cap.isOpened()):
+    
+    frameNumber += 1            # Increase number of Frame
+
+    ret, img = cap.read()    
+    img = flippedImage(img)
+
+    ## Create 2 rectangle to detect the hand
+    cv2.rectangle(img,(400,400),(100,100),(0,255,0),0)
+    crop_img = img[100:400, 100:400]
+
+ 
+    thresh1 = blackWhiteImage(crop_img)
+    # grey = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+    # value = (35, 35)
+    # blurred = cv2.GaussianBlur(grey, value, 0)
+    # _, thresh1 = cv2.threshold(blurred, 150, 255,
+    #                            cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
     cv2.imshow('Thresholded', thresh1)
 
-    #(version, _, _) = cv2.__version__.split('.')
-
-    #elif version is '2':
     contours, hierarchy = cv2.findContours(thresh1.copy(),cv2.RETR_TREE, \
         cv2.CHAIN_APPROX_NONE)
 
@@ -95,7 +118,6 @@ while(cap.isOpened()):
         cv2.putText(img,"No Fingers!!!", (50,50),\
                     cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
         if len(lastFive)>2 and len(lastZero)>2:
-
             if frameNumber - lastFive[-1]<10 and abs(lastZero[-1]-lastFive[-1])<10 and frameNumber - lastFrameDetected >40 :
                     print("Goodbye")
                     os.system("say 'goodbye'")
@@ -103,11 +125,15 @@ while(cap.isOpened()):
                     lastFive = []
                     lastZero = []
         lastZero.append(frameNumber)
-    #cv2.imshow('drawing', drawing)
-    #cv2.imshow('end', crop_img)
     cv2.imshow('Gesture', img)
     all_img = np.hstack((drawing, crop_img))
-    cv2.imshow('Contours', all_img)
+    #cv2.imshow('Contours', all_img)
     k = cv2.waitKey(10)
     if k == 27:
         break
+    else
+
+
+
+
+#def toGreyScale(image):
