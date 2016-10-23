@@ -1,5 +1,4 @@
 import sys
-sys.path.append('/usr/local/lib/python2.7/site-packages')
 import cv2
 import numpy as np
 import math
@@ -131,7 +130,6 @@ while(cap.isOpened()):
     k = cv2.waitKey(10)
     if k == 27:
         break
-    else
 
 
 

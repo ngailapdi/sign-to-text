@@ -2,6 +2,15 @@ import sys
 import numpy as np
 import cv2
 
+def flippedImage(image):
+    if image is not None:
+        flip_image = image.copy()
+        flip_image = cv2.flip(image,1)
+    else:
+        flip_image = img
+    return flip_image
+
+
 def blackWhiteImage(image):
     grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     value = (35, 35)
@@ -22,12 +31,17 @@ cap = cv2.VideoCapture(0)
 count = 0;
 while (cap.isOpened()):
     ret, img = cap.read()
+    img = flippedImage(img)
+    cv2.rectangle(img,(400,400),(100,100),(0,255,0),0)
+    crop_img = img[100:400, 100:400]
     cv2.imshow('Training', img)
+    thresh = blackWhiteImage(crop_img)
+    cv2.imshow('Thresholded', thresh)
     k = cv2.waitKey(10)
-    if (k == 48):
+    if (k == 27):
         break
     elif (k != -1):
-        thresh = blackWhiteImage(img)
+        
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         for cnt in contours:
             if cv2.contourArea(cnt)>200:
@@ -37,7 +51,7 @@ while (cap.isOpened()):
                     roismall = cv2.resize(roi,(10,10))
                     key = cv2.waitKey(10)
                     responses.append(k)
-                    cv2.imwrite('./img/test{0}.png'.format(count), img)
+                    cv2.imwrite('./img/test{0}.png'.format(count), crop_img)
                     sample = roismall.reshape((1,100))
                     samples = np.append(samples, sample, 0)
                     count += 1

@@ -46,46 +46,43 @@ while(cap.isOpened()):
     
     frameNumber += 1            # Increase number of Frame
 
-    ret, img = cap.read()    
+    ret, img = cap.read()   
     img = flippedImage(img)
-
     ## Create 2 rectangle to detect the hand
     cv2.rectangle(img,(400,400),(100,100),(0,255,0),0)
     crop_img = img[100:400, 100:400]
 
  
     thresh1 = blackWhiteImage(crop_img)
+    #thresh1 = blackWhiteImage(img)
     cv2.imshow('Thresholded', thresh1)
 
-    contours, hierarchy = cv2.findContours(thresh1.copy(),cv2.RETR_LIST, \
-        cv2.CHAIN_APPROX_NONE)
-
-
-
-
+    contours, hierarchy = cv2.findContours(thresh1,cv2.RETR_LIST, 
+        cv2.CHAIN_APPROX_SIMPLE)
+    #print(len(contours))
     cnt = max(contours, key = lambda x: cv2.contourArea(x))
     cv2.imshow('Gesture', img)
-
 
     k = cv2.waitKey(10)
     if k == 27:
         break
     elif k == 48: 
-        cv2.imwrite('V.png',thresh1)
+        cv2.imwrite('V.png',crop_img)
         break
-    if cv2.contourArea(cnt)>50:
+    if cv2.contourArea(cnt)>5000:
         [x,y,w,h] = cv2.boundingRect(cnt)
-        if  h>28:
+        if  h>100:
             #cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,0),2)
             roi = thresh1[y:y+h,x:x+w]
             roismall = cv2.resize(roi,(10,10))
             roismall = roismall.reshape((1,100))
             roismall = np.float32(roismall)
             retval, results, neigh_resp, dists = model.find_nearest(roismall, k = 1)
-            string = str(int((results[0][0])))
-            if (dists<50):
-                print(string)    
-            else:
+            string = str(int((results[0][0]))-48)
+            if (dists<30):
+                print(string)
+                os.system("say '{0}'".format(string)) 
+            else:    
                 print(dists)
     # x,y,w,h = cv2.boundingRect(cnt)
 
