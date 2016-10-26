@@ -1,3 +1,4 @@
+#Calculate the fps of the camera
 import sys
 sys.path.append('/usr/local/lib/python2.7/site-packages')
 import cv2
@@ -9,7 +10,6 @@ frameNum = 0
 start = time.time()
 while(cap.isOpened()):
 	ret,img = cap.read()                         #reading the frames
-
 	frameNum += 1
 	if frameNum == 100:
 		break
