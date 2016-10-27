@@ -1,6 +1,9 @@
 # MagicHand - Translating sign language to audio
 
 This project is made during HackGSU 2016 and was awarded "Hackathon Winner - Organizer's Choice'
+
+MagicHand helps translate sign language (by images) to voice in any language using K-Nearest Neighbors algorithms in OpenCV
+
 ### Installation
 MagicHand requires [OpenCV 2.x](http://#) and [Python 2.7](https://www.python.org/download/releases/2.7/)
 
