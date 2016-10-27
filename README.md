@@ -51,7 +51,11 @@ $ ln -s /usr/local/Cellar/opencv/2.x.x/lib/python2.x/site-packages/cv2.so cv2.so
 
 * This program has been tested on Mac. os.say() will not work in Windows OS. You will need to modify os.say() to a similar window cmd in order for it to work
 * Run train.py to train the data set for your hand gesture (you can only map **numbers** to the gestures, NOT characters.
-* Modify the word map in main.py and run main.py to detect and say the gesture you've already mapped
+* Map the number with associated words/phrases by modifying the words dict in main.py
+* Run main.py to detect and say the gesture you've already mapped
+```python
+words = {0: 'Hello', 1: 'I', 2: 'Love', 3: 'You', 5: 'Good Bye', 7: 'Hack GSU 2016'}
+```
 
 ## Contributors
 
