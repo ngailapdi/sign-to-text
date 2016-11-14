@@ -2,6 +2,8 @@
 
 This project is made during HackGSU 2016 and was awarded "Hackathon Winner - Organizer's Choice'
 
+Link to Devpost: https://devpost.com/software/magichand
+
 MagicHand helps translate sign language (by images) to voice in any language using K-Nearest Neighbors algorithms in OpenCV
 
 ### Installation
